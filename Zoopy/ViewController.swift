@@ -36,10 +36,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         var initialzPosition: Float = -3.0
         for item in 0...10 {
 
-            let text = SCNText(string: "\(String(item))", extrusionDepth: 0.1)
+            let text = SCNText(string: "\(String(item))", extrusionDepth: 0)
             text.firstMaterial?.diffuse.contents = UIColor.generateRandomPastelColor(withMixedColor: nil)
             text.alignmentMode = kCAAlignmentCenter
-            text.font = UIFont(name: "CourierNewPS-BoldMT", size: 1)
+            text.font = UIFont(name: "ComicNeue-Bold", size: 1)
             text.name = "number\(String(item))"
 
             // Position Node
