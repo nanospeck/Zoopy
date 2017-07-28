@@ -16,42 +16,43 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setupScene()
+        addGestureRecognizer()
+    }
+
+    func setupScene() {
         // Set the view's delegate
         sceneView.delegate = self
-        
+
         // Show statistics such as fps and timing information
         sceneView.showsStatistics = true
-        
+        sceneView.automaticallyUpdatesLighting = true
+
         // Create a new scene
         //        let scene = SCNScene(named: "art.scnassets/ship.scn")!
-        //        let scene = SCNScene(named: "art.scnassets/rabbit.scn")!
         let scene = SCNScene()
-        var numberPosition = -10
 
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ViewController.sceneTapped))
-        let gestureRecognizers = NSMutableArray()
-        gestureRecognizers.add(tapGesture)
-        if let arr = sceneView.gestureRecognizers {
-            gestureRecognizers.addObjects(from:arr)
-        }
-        sceneView.gestureRecognizers = gestureRecognizers as? [UIGestureRecognizer]
+        var initialxPosition: Float = -2.0
+        var initialzPosition: Float = -3.0
+        for item in 0...10 {
 
-        for item in 1...10 {
-
-            let text = SCNText(string: String(item), extrusionDepth: 0.2)
-            text.font = UIFont.systemFont(ofSize: 1.0)
-            text.firstMaterial?.diffuse.contents = UIColor.cyan
+            let text = SCNText(string: "\(String(item))", extrusionDepth: 0.1)
+            text.firstMaterial?.diffuse.contents = UIColor.generateRandomPastelColor(withMixedColor: nil)
+            text.alignmentMode = kCAAlignmentCenter
+            text.font = UIFont(name: "CourierNewPS-BoldMT", size: 1)
             text.name = "number\(String(item))"
 
             // Position Node
             let textNode = SCNNode(geometry: text)
-//            let ramdomNumber = arc4random_uniform(10)
 
-            let ramdomNumber = numberPosition
-            numberPosition += 1
-            textNode.position = SCNVector3(x: Float(ramdomNumber), y: 0, z: -5)
-            textNode.name = String(item)
+            //            let ramdomNumber = arc4random_uniform(10)
+            let xPosition = initialxPosition
+            initialxPosition += 0.8
+            let yPosition = -2
+            let zPosition = initialzPosition
+
+            textNode.position = SCNVector3(x: Float(xPosition), y: Float(yPosition), z: Float(zPosition))
+            textNode.name = "\(String(item))"
 
             scene.rootNode.addChildNode(textNode)
         }
@@ -59,14 +60,48 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Set the scene to the view
         sceneView.scene = scene
     }
+    
+    func addGestureRecognizer() {
+        let tapGesture = UITapGestureRecognizer(
+            target: self,
+            action: #selector(ViewController.sceneTapped(recognizer:))
+        )
+        let gestureRecognizers = NSMutableArray()
+        gestureRecognizers.add(tapGesture)
 
-    @objc func sceneTapped(recognizer: UITapGestureRecognizer) {
+        if let gestureRecognizerObject = sceneView.gestureRecognizers {
+            gestureRecognizers.addObjects(from:gestureRecognizerObject)
+        }
+        sceneView.gestureRecognizers = gestureRecognizers as? [UIGestureRecognizer]
+    }
+
+    @objc
+    func sceneTapped(recognizer: UITapGestureRecognizer) {
         let location = recognizer.location(in: sceneView)
         let hits = sceneView.hitTest(location, options: nil)
 
         guard let tappedNode = hits.first?.node else { return }
 
+        guard let nodeColor = tappedNode.geometry?.firstMaterial?.diffuse.contents as? UIColor else {
+            print("No nodeColor")
+            return
+        }
+
+        SCNTransaction.begin()
+        SCNTransaction.animationDuration = 0.5
+
+        SCNTransaction.completionBlock = {
+
+            if nodeColor.isEqual(UIColor.cyan) {
+                tappedNode.geometry?.firstMaterial?.diffuse.contents = UIColor.black
+            } else {
+                tappedNode.geometry?.firstMaterial?.diffuse.contents = UIColor.cyan
+            }
+            SCNTransaction.commit()
+        }
+
         tappedNode.geometry?.firstMaterial?.diffuse.contents = UIColor.black
+        SCNTransaction.commit()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -84,58 +119,5 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Pause the view's session
         sceneView.session.pause()
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Release any cached data, images, etc that aren't in use.
-    }
-
-    // MARK: - ARSCNViewDelegate
-    
-    /*
-     // Override to create and configure nodes for anchors added to the view's session.
-     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
-     let node = SCNNode()
-     
-     return node
-     }
-     */
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        guard let touch = touches.first else { return }
-//        let results = sceneView.hitTest(touch.location(in: sceneView), types: [ARHitTestResult.ResultType.featurePoint])
-//
-//        print(results.debugDescription)
-//
-//        guard let hitFeature = results.last else { return }
-//
-//        guard let anchor = hitFeature.anchor else { return }
-//
-//        let touchedNode = sceneView.node(for: anchor)
-//        // Un-share the geometry by copying
-//        touchedNode?.geometry = touchedNode!.geometry?.copy() as? SCNGeometry
-//
-//        // Un-share the material, too
-//        touchedNode?.geometry?.firstMaterial = touchedNode?.geometry?.firstMaterial!.copy() as? SCNMaterial
-//        // Now, we can change node's material without changing parent and other childs:
-//        touchedNode?.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
-////        let hitTransform = SCNMatrix4(hitFeature.worldTransform)
-////        let hitVector = SCNVector3Make(hitTransform.m41, hitTransform.m42, hitTransform.m43)
-////        TextNode.firstMaterial?.diffuse.contents = UIColor.cyan
-//    }
-
-    func session(_ session: ARSession, didFailWithError error: Error) {
-        // Present an error message to the user
-        
-    }
-    
-    func sessionWasInterrupted(_ session: ARSession) {
-        // Inform the user that the session has been interrupted, for example, by presenting an overlay
-        
-    }
-    
-    func sessionInterruptionEnded(_ session: ARSession) {
-        // Reset tracking and/or remove existing anchors if consistent tracking is required
-        
     }
 }
