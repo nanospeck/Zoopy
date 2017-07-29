@@ -94,12 +94,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             return
         }
 
-        if tappedNode.name == "3" {
-            AudioController.shared.addSound(fileName: "Success.wav", name: "Success")
-            AudioController.shared.playSound(node: tappedNode, name: "Success")
+        guard tappedNode.name == "3" else {
+            AudioController.shared.addSound(fileName: "Fail.wav", name: "Fail")
+            AudioController.shared.playSound(node: tappedNode, name: "Fail")
+            return
         }
 
-        print(tappedNode.scale)
+        AudioController.shared.addSound(fileName: "Success.wav", name: "Success")
+        AudioController.shared.playSound(node: tappedNode, name: "Success")
 
         SCNTransaction.begin()
         SCNTransaction.animationDuration = 0
@@ -127,7 +129,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         tappedNode.geometry?.firstMaterial?.diffuse.contents = UIColor.black
         SCNTransaction.commit()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
