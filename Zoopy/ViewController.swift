@@ -99,21 +99,31 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             AudioController.shared.playSound(node: tappedNode, name: "Success")
         }
 
+        print(tappedNode.scale)
+
         SCNTransaction.begin()
         SCNTransaction.animationDuration = 0
 
         SCNTransaction.completionBlock = {
 
             SCNTransaction.begin()
-            SCNTransaction.animationDuration = 0.5
+            SCNTransaction.animationDuration = 1
             if nodeColor.isEqual(UIColor.cyan) {
                 tappedNode.geometry?.firstMaterial?.diffuse.contents = UIColor.black
             } else {
                 tappedNode.geometry?.firstMaterial?.diffuse.contents = UIColor.cyan
             }
+            let scaleForCorrectAnswer: Float = 1
+            tappedNode.scale = SCNVector3(
+                x:scaleForCorrectAnswer,
+                y:scaleForCorrectAnswer,
+                z:scaleForCorrectAnswer)
             SCNTransaction.commit()
         }
-
+        let scaleBackToOriginalValue: Float = 1.5
+        tappedNode.scale = SCNVector3(x:scaleBackToOriginalValue,
+                                      y:scaleBackToOriginalValue,
+                                      z:scaleBackToOriginalValue)
         tappedNode.geometry?.firstMaterial?.diffuse.contents = UIColor.black
         SCNTransaction.commit()
     }
