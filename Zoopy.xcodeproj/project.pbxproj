@@ -26,6 +26,10 @@
 		444470CD1F2B937500511A3A /* ComicNeue-Angular_Oblique.otf in Resources */ = {isa = PBXBuildFile; fileRef = 444470C11F2B932B00511A3A /* ComicNeue-Angular_Oblique.otf */; };
 		444470CE1F2B937500511A3A /* ComicNeue-Angular-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 444470BF1F2B932B00511A3A /* ComicNeue-Angular-Regular.otf */; };
 		444470CF1F2B937500511A3A /* ComicNeue-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 444470BB1F2B932A00511A3A /* ComicNeue-Regular.otf */; };
+		44AE58FC1F2CD42B00029000 /* NumberThree.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 444470D91F2CD2E900511A3A /* NumberThree.m4a */; };
+		44AE59001F2CE3F600029000 /* AudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44AE58FF1F2CE3F600029000 /* AudioController.swift */; };
+		44AE59011F2CE9A800029000 /* Fail.wav in Resources */ = {isa = PBXBuildFile; fileRef = 44AE58FE1F2CD81D00029000 /* Fail.wav */; };
+		44AE59021F2CE9A800029000 /* Success.wav in Resources */ = {isa = PBXBuildFile; fileRef = 44AE58FD1F2CD71D00029000 /* Success.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +54,10 @@
 		444470BF1F2B932B00511A3A /* ComicNeue-Angular-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ComicNeue-Angular-Regular.otf"; sourceTree = "<group>"; };
 		444470C01F2B932B00511A3A /* ComicNeue_Bold_Oblique.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ComicNeue_Bold_Oblique.otf; sourceTree = "<group>"; };
 		444470C11F2B932B00511A3A /* ComicNeue-Angular_Oblique.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ComicNeue-Angular_Oblique.otf"; sourceTree = "<group>"; };
+		444470D91F2CD2E900511A3A /* NumberThree.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = NumberThree.m4a; sourceTree = "<group>"; };
+		44AE58FD1F2CD71D00029000 /* Success.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Success.wav; sourceTree = "<group>"; };
+		44AE58FE1F2CD81D00029000 /* Fail.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Fail.wav; sourceTree = "<group>"; };
+		44AE58FF1F2CE3F600029000 /* AudioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +97,7 @@
 				441B21EE1F27B57C003D8276 /* Main.storyboard */,
 				441B21F31F27B57C003D8276 /* LaunchScreen.storyboard */,
 				441B21F61F27B57C003D8276 /* Info.plist */,
+				44AE58FF1F2CE3F600029000 /* AudioController.swift */,
 			);
 			path = Zoopy;
 			sourceTree = "<group>";
@@ -115,11 +124,22 @@
 		444470C31F2B934600511A3A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				444470D81F2CD1CB00511A3A /* Audio */,
 				444470C21F2B933200511A3A /* Font */,
 				441B21EA1F27B57C003D8276 /* art.scnassets */,
 				441B21F11F27B57C003D8276 /* Assets.xcassets */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		444470D81F2CD1CB00511A3A /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				444470D91F2CD2E900511A3A /* NumberThree.m4a */,
+				44AE58FE1F2CD81D00029000 /* Fail.wav */,
+				44AE58FD1F2CD71D00029000 /* Success.wav */,
+			);
+			name = Audio;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -180,6 +200,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				44AE59011F2CE9A800029000 /* Fail.wav in Resources */,
+				44AE59021F2CE9A800029000 /* Success.wav in Resources */,
+				44AE58FC1F2CD42B00029000 /* NumberThree.m4a in Resources */,
 				444470C41F2B937500511A3A /* ComicNeue_Bold_Oblique.otf in Resources */,
 				444470C51F2B937500511A3A /* ComicNeue_Bold.otf in Resources */,
 				444470C61F2B937500511A3A /* ComicNeue_Light_Oblique.otf in Resources */,
@@ -208,6 +231,7 @@
 			files = (
 				441B21ED1F27B57C003D8276 /* ViewController.swift in Sources */,
 				444470B51F2B88F900511A3A /* Extensions.swift in Sources */,
+				44AE59001F2CE3F600029000 /* AudioController.swift in Sources */,
 				441B21E91F27B57C003D8276 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

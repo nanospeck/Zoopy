@@ -13,11 +13,16 @@ import ARKit
 class ViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet var sceneView: ARSCNView!
+    lazy var scene: SCNScene = {
+        let scene = SCNScene()
+        return scene
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupScene()
         addGestureRecognizer()
+        askQuestions()
     }
 
     func setupScene() {
@@ -28,33 +33,29 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.showsStatistics = true
         sceneView.automaticallyUpdatesLighting = true
 
-        // Create a new scene
-        //        let scene = SCNScene(named: "art.scnassets/ship.scn")!
-        let scene = SCNScene()
-
+        // Setup Numbers
         var initialxPosition: Float = -2.0
-        var initialzPosition: Float = -3.0
+        let initialzPosition: Float = -3.0
         for item in 0...10 {
 
-            let text = SCNText(string: "\(String(item))", extrusionDepth: 0)
-            text.firstMaterial?.diffuse.contents = UIColor.generateRandomPastelColor(withMixedColor: nil)
-            text.alignmentMode = kCAAlignmentCenter
-            text.font = UIFont(name: "ComicNeue-Bold", size: 1)
-            text.name = "number\(String(item))"
+            let number = SCNText(string: "\(String(item))", extrusionDepth: 0.2)
+            number.firstMaterial?.diffuse.contents = UIColor.generateRandomPastelColor(withMixedColor: nil)
+            number.alignmentMode = kCAAlignmentCenter
+            number.font = UIFont(name: "ComicNeue-Bold", size: 1)
+            number.name = "number\(String(item))"
 
             // Position Node
-            let textNode = SCNNode(geometry: text)
+            let numberNode = SCNNode(geometry: number)
 
-            //            let ramdomNumber = arc4random_uniform(10)
             let xPosition = initialxPosition
             initialxPosition += 0.8
             let yPosition = -2
             let zPosition = initialzPosition
 
-            textNode.position = SCNVector3(x: Float(xPosition), y: Float(yPosition), z: Float(zPosition))
-            textNode.name = "\(String(item))"
+            numberNode.position = SCNVector3(x: Float(xPosition), y: Float(yPosition), z: Float(zPosition))
+            numberNode.name = "\(String(item))"
 
-            scene.rootNode.addChildNode(textNode)
+            scene.rootNode.addChildNode(numberNode)
         }
 
         // Set the scene to the view
@@ -75,8 +76,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.gestureRecognizers = gestureRecognizers as? [UIGestureRecognizer]
     }
 
+    func askQuestions() {
+        AudioController.shared.addSound(fileName: "NumberThree.m4a", name: "NumberThree")
+        AudioController.shared.playSound(node: scene.rootNode, name: "NumberThree")
+    }
+
     @objc
     func sceneTapped(recognizer: UITapGestureRecognizer) {
+
         let location = recognizer.location(in: sceneView)
         let hits = sceneView.hitTest(location, options: nil)
 
@@ -87,11 +94,18 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             return
         }
 
+        if tappedNode.name == "3" {
+            AudioController.shared.addSound(fileName: "Success.wav", name: "Success")
+            AudioController.shared.playSound(node: tappedNode, name: "Success")
+        }
+
         SCNTransaction.begin()
-        SCNTransaction.animationDuration = 0.5
+        SCNTransaction.animationDuration = 0
 
         SCNTransaction.completionBlock = {
 
+            SCNTransaction.begin()
+            SCNTransaction.animationDuration = 0.5
             if nodeColor.isEqual(UIColor.cyan) {
                 tappedNode.geometry?.firstMaterial?.diffuse.contents = UIColor.black
             } else {
