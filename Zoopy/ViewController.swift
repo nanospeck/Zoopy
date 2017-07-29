@@ -97,6 +97,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         guard tappedNode.name == "3" else {
             AudioController.shared.addSound(fileName: "Fail.wav", name: "Fail")
             AudioController.shared.playSound(node: tappedNode, name: "Fail")
+
+            let moveUp = SCNAction.moveBy(x: 0.0, y: 0.1, z: 0.0, duration: 0.1)
+            let moveDown = SCNAction.moveBy(x: 0.0, y: -0.1, z: 0.0, duration: 0.1)
+            let sequence = SCNAction.sequence([moveUp,moveDown,moveUp,moveDown])
+
+            guard let sequenceToAnimate = sequence else { return }
+
+            tappedNode.runAction(sequenceToAnimate)
             return
         }
 
