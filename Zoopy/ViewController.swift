@@ -34,25 +34,27 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.automaticallyUpdatesLighting = true
 
         // Setup Numbers
-        var initialxPosition: Float = -2.0
-        let initialzPosition: Float = -3.0
+        var angle:Float = 0.0
+        let radius:Float = 4.0
+        let angleIncrement:Float = Float.pi * 2.0 / Float(11)
+
         for item in 0...10 {
 
             let number = SCNText(string: "\(String(item))", extrusionDepth: 0.2)
             number.firstMaterial?.diffuse.contents = UIColor.generateRandomPastelColor(withMixedColor: nil)
             number.alignmentMode = kCAAlignmentCenter
-            number.font = UIFont(name: "ComicNeue-Bold", size: 1)
+            number.font = UIFont(name: "ComicNeue-Bold", size: 1.5)
             number.name = "number\(String(item))"
 
             // Position Node
             let numberNode = SCNNode(geometry: number)
 
-            let xPosition = initialxPosition
-            initialxPosition += 0.8
-            let yPosition = -2
-            let zPosition = initialzPosition
+            let x = radius * cos(angle)
+            let z = radius * sin(angle)
+            numberNode.position = SCNVector3Make(x, -1, z)
+            numberNode.constraints = [SCNBillboardConstraint()]
+            angle += angleIncrement
 
-            numberNode.position = SCNVector3(x: Float(xPosition), y: Float(yPosition), z: Float(zPosition))
             numberNode.name = "\(String(item))"
 
             scene.rootNode.addChildNode(numberNode)
