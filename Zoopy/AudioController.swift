@@ -20,29 +20,17 @@ class AudioController: SCNNode {
     }
 
     func addSound(fileName: String, name: String) {
-        guard let sound = SCNAudioSource(named: fileName) else {
-            print("No Sound found")
-            return
-        }
-
+        guard let sound = SCNAudioSource(named: fileName) else { return }
         sound.volume = 2
         sound.isPositional = true
         sound.load()
         sounds[name] = sound
-        print(sounds)
     }
 
     func playSound(node: SCNNode, name: String) {
-        print("playSound")
-        print(sounds)
-        guard let sound = sounds[name] else {
-            print("No sound")
-            return
-        }
-        print(sound)
+        guard let sound = sounds[name] else { return }
 
         let action = SCNAction.playAudio(sound, waitForCompletion: false)
-        print("Jes suis là")
 
         node.runAction(action)
     }
