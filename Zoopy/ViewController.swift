@@ -44,8 +44,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             number.firstMaterial?.diffuse.contents = UIColor.generateRandomPastelColor(withMixedColor: nil)
             number.alignmentMode = kCAAlignmentCenter
             number.font = UIFont(name: "ComicNeue-Bold", size: 1.5)
+            number.flatness = CGFloat(0)
             number.name = "number\(String(item))"
-
             // Position Node
             let numberNode = SCNNode(geometry: number)
 
