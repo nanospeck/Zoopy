@@ -17,6 +17,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let scene = SCNScene()
         return scene
     }()
+    var shuffle: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,12 +35,16 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.automaticallyUpdatesLighting = true
 
         // Setup Numbers
-        var angle:Float = 0.0
-        let radius:Float = 4.0
-        let angleIncrement:Float = Float.pi * 2.0 / Float(11)
+        var angle: Float = 0.0
+        let radius: Float = 4.0
+        let numbersList = 0...3
+        if shuffle {
+            numbersList.shuffled()
+        }
 
-        for item in 0...10 {
+        let angleIncrement:Float = Float.pi * 2.0 / Float(numbersList.count)
 
+        for item in numbersList {
             let number = SCNText(string: "\(String(item))", extrusionDepth: 0.2)
             number.firstMaterial?.diffuse.contents = UIColor.generateRandomPastelColor(withMixedColor: nil)
             number.alignmentMode = kCAAlignmentCenter
@@ -91,11 +96,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
         guard let tappedNode = hits.first?.node else { return }
 
-        guard let nodeColor = tappedNode.geometry?.firstMaterial?.diffuse.contents as? UIColor else {
-            print("No nodeColor")
-            return
-        }
-
         guard tappedNode.name == "3" else {
             AudioController.shared.addSound(fileName: "Fail.wav", name: "Fail")
             AudioController.shared.playSound(node: tappedNode, name: "Fail")
@@ -113,31 +113,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         AudioController.shared.addSound(fileName: "Success.wav", name: "Success")
         AudioController.shared.playSound(node: tappedNode, name: "Success")
 
-        SCNTransaction.begin()
-        SCNTransaction.animationDuration = 0
+        let moveUp = SCNAction.moveBy(x: 0.0, y: 0.3, z: 0.0, duration: 0.3)
+        let moveDown = SCNAction.moveBy(x: 0.0, y: -0.3, z: 0.0, duration: 0.1)
+        let sequence = SCNAction.sequence([moveUp,moveDown])
 
-        SCNTransaction.completionBlock = {
+        guard let sequenceToAnimate = sequence else { return }
 
-            SCNTransaction.begin()
-            SCNTransaction.animationDuration = 1
-            if nodeColor.isEqual(UIColor.cyan) {
-                tappedNode.geometry?.firstMaterial?.diffuse.contents = UIColor.black
-            } else {
-                tappedNode.geometry?.firstMaterial?.diffuse.contents = UIColor.cyan
-            }
-            let scaleForCorrectAnswer: Float = 1
-            tappedNode.scale = SCNVector3(
-                x:scaleForCorrectAnswer,
-                y:scaleForCorrectAnswer,
-                z:scaleForCorrectAnswer)
-            SCNTransaction.commit()
-        }
-        let scaleBackToOriginalValue: Float = 1.5
-        tappedNode.scale = SCNVector3(x:scaleBackToOriginalValue,
-                                      y:scaleBackToOriginalValue,
-                                      z:scaleBackToOriginalValue)
-        tappedNode.geometry?.firstMaterial?.diffuse.contents = UIColor.black
-        SCNTransaction.commit()
+        tappedNode.runAction(sequenceToAnimate)
     }
 
     override func viewWillAppear(_ animated: Bool) {
